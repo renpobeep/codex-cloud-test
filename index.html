@@ -3,52 +3,328 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Codex Cloud Test</title>
+  <title>High Score Viewer | IDE Story Mania!</title>
   <style>
-    * {
-      box-sizing: border-box;
+    :root {
+      --ink: #24120a;
+      --gold: #ffd45a;
+      --gold-dark: #9a5007;
+      --cream: #fff3c6;
+      --ride-blue: #0569df;
+      --ride-red: #e3262e;
     }
+
+    * { box-sizing: border-box; }
+
+    html, body { min-height: 100%; }
 
     body {
+      margin: 0;
+      padding: clamp(0.5rem, 1.5vw, 1.25rem);
+      color: var(--ink);
+      font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+      background:
+        radial-gradient(circle at 50% 0, #7d2a92 0 2%, transparent 28%),
+        repeating-linear-gradient(45deg, #1b0731 0 18px, #260b42 18px 36px);
+    }
+
+    .viewer {
+      position: relative;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(18rem, 1.28fr) minmax(0, 1fr);
+      width: min(100%, 100rem);
+      min-height: min(calc(100vh - 2.5rem), 56.25rem);
+      margin: auto;
+      overflow: hidden;
+      border: clamp(5px, 0.7vw, 10px) ridge var(--gold);
+      border-radius: 1.25rem;
+      background: var(--cream);
+      box-shadow: 0 0 0 4px #6d3403, 0 0 35px rgba(255, 201, 47, 0.55);
+    }
+
+    .viewer::before {
+      content: "★  ★  ★  ★  ★  ★  ★";
+      position: absolute;
+      z-index: 5;
+      top: 0.3rem;
+      left: 50%;
+      width: 100%;
+      color: var(--gold);
+      font: 700 clamp(0.65rem, 1.3vw, 1.2rem) Georgia, serif;
+      letter-spacing: clamp(0.4rem, 2vw, 2.2rem);
+      text-align: center;
+      text-shadow: 1px 2px 0 #7c3e00;
+      transform: translateX(-50%);
+      pointer-events: none;
+    }
+
+    .panel {
+      position: relative;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
-      min-height: 100vh;
-      margin: 0;
-      padding: 2rem;
-      color: #1f2937;
-      font-family: Arial, sans-serif;
+      min-width: 0;
+      padding: clamp(2.6rem, 5vw, 5rem) clamp(0.8rem, 2vw, 2rem) 2rem;
       text-align: center;
-      background: #f3f4f6;
     }
 
-    main {
-      width: min(100%, 48rem);
-      padding: 3rem 2rem;
-      background: #ffffff;
-      border-radius: 1rem;
-      box-shadow: 0 1rem 2.5rem rgba(31, 41, 55, 0.12);
+    .ride {
+      color: #fff;
+      text-shadow: 3px 4px 0 rgba(30, 10, 0, 0.75);
     }
 
-    h1 {
-      margin: 0;
-      color: #111827;
-      font-size: clamp(2.5rem, 8vw, 5rem);
-      line-height: 1.1;
+    .ride-one {
+      background: radial-gradient(circle at 50% 40%, #24a8ff, var(--ride-blue) 52%, #003b98 100%);
+      border-right: 5px double var(--gold);
     }
 
-    p {
-      margin: 1.5rem 0 0;
-      color: #4b5563;
-      font-size: clamp(1rem, 2.5vw, 1.25rem);
-      line-height: 1.6;
+    .ride-two {
+      background: radial-gradient(circle at 50% 40%, #ff5651, var(--ride-red) 52%, #8c0618 100%);
+      border-left: 5px double var(--gold);
+    }
+
+    .ride::after {
+      content: "★";
+      position: absolute;
+      right: 1rem;
+      bottom: 0.5rem;
+      color: rgba(255, 216, 82, 0.2);
+      font-size: clamp(7rem, 16vw, 16rem);
+      line-height: 1;
+    }
+
+    h1, h2, p { margin: 0; }
+
+    .ride-title {
+      position: relative;
+      z-index: 1;
+      margin-bottom: clamp(2rem, 6vh, 5rem);
+      color: #fff7c7;
+      font-size: clamp(2.5rem, 5.5vw, 6rem);
+      letter-spacing: 0.05em;
+      line-height: 0.9;
+      transform: rotate(-2deg);
+    }
+
+    .ride-two .ride-title { transform: rotate(2deg); }
+
+    .players {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      gap: clamp(2rem, 6vh, 5rem);
+      width: 100%;
+    }
+
+    .player-name {
+      margin-bottom: 0.65rem;
+      color: #fff;
+      font-family: "Arial Black", Impact, sans-serif;
+      font-size: clamp(1.05rem, 2.1vw, 2rem);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .score {
+      display: flex;
+      justify-content: center;
+      gap: clamp(2px, 0.35vw, 6px);
+      filter: drop-shadow(0 5px 0 rgba(45, 18, 0, 0.55));
+    }
+
+    .digit {
+      display: grid;
+      place-items: center;
+      width: clamp(1.5rem, 3.2vw, 3.4rem);
+      aspect-ratio: 0.72;
+      color: #fff4a6;
+      font-family: "Courier New", Courier, monospace;
+      font-size: clamp(1.35rem, 3.2vw, 3.3rem);
+      font-weight: 900;
+      line-height: 1;
+      background: linear-gradient(#211910 49%, #080706 50%);
+      border: 2px solid #f7b927;
+      border-radius: 0.25rem;
+      box-shadow: inset 0 0 7px #000, 0 0 0 1px #6a3500;
+    }
+
+    .digit.comma {
+      width: clamp(0.7rem, 1.5vw, 1.4rem);
+      color: var(--gold);
+      background: transparent;
+      border: 0;
+      box-shadow: none;
+    }
+
+    .center-stage {
+      justify-content: flex-start;
+      background:
+        linear-gradient(rgba(255,255,255,0.28), rgba(255,255,255,0)),
+        repeating-linear-gradient(90deg, rgba(176, 109, 16, 0.06) 0 2px, transparent 2px 9px),
+        var(--cream);
+    }
+
+    .today {
+      color: #7a270e;
+      font-family: "Arial Black", sans-serif;
+      font-size: clamp(1rem, 2.2vw, 2.1rem);
+      letter-spacing: 0.3em;
+    }
+
+    .top-three {
+      margin-bottom: clamp(1.5rem, 3.2vh, 2.6rem);
+      color: #b31924;
+      font-size: clamp(3.2rem, 7vw, 7rem);
+      letter-spacing: 0.04em;
+      line-height: 0.95;
+      -webkit-text-stroke: clamp(1px, 0.2vw, 3px) #6c180e;
+      text-shadow: 0 4px 0 var(--gold), 0 8px 0 #7a3807;
+    }
+
+    .podium {
+      display: grid;
+      gap: clamp(1rem, 2.4vh, 2rem);
+      width: 100%;
+      max-width: 33rem;
+    }
+
+    .rank {
+      position: relative;
+      padding-top: clamp(1.2rem, 2.6vw, 2.4rem);
+    }
+
+    .rank.first { transform: scale(1.08); margin: 0.2rem 0 0.5rem; }
+
+    .crown {
+      position: absolute;
+      z-index: 2;
+      top: 0;
+      left: 50%;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      width: clamp(3.2rem, 6vw, 5.8rem);
+      height: clamp(2.7rem, 5vw, 4.8rem);
+      padding-bottom: 0.42em;
+      color: #3b2108;
+      font: 900 clamp(1rem, 2.1vw, 2rem) "Arial Black", sans-serif;
+      clip-path: polygon(0 18%, 24% 50%, 40% 5%, 58% 49%, 82% 4%, 100% 20%, 89% 100%, 10% 100%);
+      background: linear-gradient(135deg, #fff4a0, var(--crown-color) 48%, var(--crown-shadow));
+      border-bottom: 4px solid var(--crown-shadow);
+      filter: drop-shadow(0 4px 1px rgba(67, 32, 2, 0.5));
+      transform: translateX(-50%) rotate(-3deg);
+    }
+
+    .first .crown {
+      --crown-color: #ffd333;
+      --crown-shadow: #ad6500;
+      width: clamp(4rem, 7.5vw, 7rem);
+      height: clamp(3.3rem, 6vw, 5.8rem);
+      font-size: clamp(1.3rem, 2.5vw, 2.5rem);
+    }
+    .second .crown { --crown-color: #d8dde2; --crown-shadow: #737b85; }
+    .third .crown { --crown-color: #d7894b; --crown-shadow: #7c3519; }
+
+    .center-stage .digit {
+      width: clamp(1.45rem, 3.05vw, 3.15rem);
+      color: #ffda4b;
+      border-color: #a7660a;
+    }
+
+    .brand {
+      margin-top: auto;
+      padding-top: clamp(1.4rem, 3vh, 2.5rem);
+      color: #174b93;
+      font-size: clamp(1.15rem, 2.7vw, 2.6rem);
+      letter-spacing: 0.04em;
+      line-height: 1;
+      text-shadow: 1px 2px 0 #fff, 2px 3px 0 var(--gold);
+      transform: skew(-6deg);
+    }
+
+    @media (max-width: 900px) {
+      body { padding: 0.4rem; }
+      .viewer {
+        grid-template-columns: minmax(0, 1fr) minmax(16rem, 1.25fr) minmax(0, 1fr);
+        min-height: min(100vh - 0.8rem, 52rem);
+      }
+      .panel { padding-inline: 0.5rem; }
+      .ride-title { font-size: clamp(1.7rem, 5vw, 3rem); }
+      .player-name { letter-spacing: 0.04em; }
+      .digit { border-width: 1px; }
+    }
+
+    @media (max-width: 680px) {
+      .viewer {
+        grid-template-columns: 1fr 1.25fr 1fr;
+        min-width: 39rem;
+      }
+      body { overflow-x: auto; }
     }
   </style>
 </head>
 <body>
-  <main>
-    <h1>Codex Cloud Test</h1>
-    <p>GitHub repository successfully edited by Codex Cloud.</p>
+  <main class="viewer" aria-label="High Score Viewer">
+    <section class="panel ride ride-one" aria-labelledby="ride-one-title">
+      <h2 class="ride-title" id="ride-one-title">RIDE 1</h2>
+      <div class="players">
+        <article>
+          <p class="player-name">Player 1</p>
+          <div class="score" data-score="8,200" aria-label="8,200 points"></div>
+        </article>
+        <article>
+          <p class="player-name">Player 2</p>
+          <div class="score" data-score="7,600" aria-label="7,600 points"></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="panel center-stage" aria-labelledby="top-three-title">
+      <p class="today">本日の</p>
+      <h1 class="top-three" id="top-three-title">TOP3</h1>
+      <div class="podium">
+        <article class="rank first">
+          <div class="crown" aria-label="1位">1</div>
+          <div class="score" data-score="12,500" aria-label="1位 12,500 points"></div>
+        </article>
+        <article class="rank second">
+          <div class="crown" aria-label="2位">2</div>
+          <div class="score" data-score="11,800" aria-label="2位 11,800 points"></div>
+        </article>
+        <article class="rank third">
+          <div class="crown" aria-label="3位">3</div>
+          <div class="score" data-score="10,900" aria-label="3位 10,900 points"></div>
+        </article>
+      </div>
+      <p class="brand">IDE STORY MANIA!</p>
+    </section>
+
+    <section class="panel ride ride-two" aria-labelledby="ride-two-title">
+      <h2 class="ride-title" id="ride-two-title">RIDE 2</h2>
+      <div class="players">
+        <article>
+          <p class="player-name">Player 1</p>
+          <div class="score" data-score="7,950" aria-label="7,950 points"></div>
+        </article>
+        <article>
+          <p class="player-name">Player 2</p>
+          <div class="score" data-score="8,410" aria-label="8,410 points"></div>
+        </article>
+      </div>
+    </section>
   </main>
+
+  <script>
+    document.querySelectorAll('[data-score]').forEach((score) => {
+      score.dataset.score.split('').forEach((character) => {
+        const digit = document.createElement('span');
+        digit.className = character === ',' ? 'digit comma' : 'digit';
+        digit.textContent = character;
+        digit.setAttribute('aria-hidden', 'true');
+        score.appendChild(digit);
+      });
+    });
+  </script>
 </body>
 </html>
