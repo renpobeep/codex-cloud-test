@@ -5,321 +5,228 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>High Score Viewer</title>
   <style>
-    :root {
-      --gold: #f8d568;
-      --gold-dark: #8f5c13;
-      --ink: #241c18;
-      --cream: #fff2c8;
-      --blue: #07549d;
-      --red: #a51f27;
-    }
-
+     @font-face {
+    font-family: "Rye";
+    src: url("assets/fonts/Rye-Regular.ttf") format("truetype");
+    font-style: normal;
+    font-weight: 400;
+}
     * { box-sizing: border-box; }
-
+    html, body { width: 100%; height: 100%; }
     body {
-      min-height: 100vh;
       margin: 0;
       display: grid;
       place-items: center;
-      overflow-x: auto;
-      color: var(--cream);
-      font-family: Impact, Haettenschweiler, "Arial Black", sans-serif;
-      background:
-        radial-gradient(circle at 50% 20%, rgba(255,255,255,.16), transparent 32%),
-        repeating-linear-gradient(135deg, #132136 0 18px, #101a2b 18px 36px);
+      overflow: hidden;
+      background: #050505;
     }
-
     .viewer {
       position: relative;
-      isolation: isolate;
-      display: grid;
-      grid-template-columns: 1fr 1.18fr 1fr;
-      width: min(96vw, 1440px);
-      aspect-ratio: 16 / 9;
-      min-height: 560px;
+      width: min(100vw, 177.7778vh);
+      height: min(100vh, 56.25vw);
       overflow: hidden;
-      border: clamp(8px, 1vw, 15px) ridge var(--gold);
-      border-radius: 22px;
-      background: #22170e;
-      box-shadow: 0 18px 55px #000b, inset 0 0 0 3px #6d3e08;
-    }
-
-    .viewer::before {
-      content: "★     ★     ★     ★     ★";
-      position: absolute;
-      z-index: 5;
-      inset: 8px 0 auto;
-      color: #fff5a8;
-      font-size: clamp(13px, 1.4vw, 23px);
-      letter-spacing: .5em;
-      text-align: center;
-      text-shadow: 0 0 8px #ffb300, 2px 2px #8a4f00;
-      pointer-events: none;
-    }
-
-    .panel {
-      position: relative;
+        background: url("assets/high-score-viewer-bg-6digit.png") center / 100% 100% no-repeat;
+}
+    
+  .score {
+    position: absolute;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: 100%;
+    place-items: center;
+    place-content: center;
+    container-type: size;
+    color: #003ee8;
+    font-family: "Rye", serif;
+    font-size: clamp(38px, 11.2vmin, 176px);
+    font-weight: 400;
+    font-stretch: normal;
+    font-variant-numeric: lining-nums tabular-nums;
+    line-height: .85;
+    white-space: nowrap;
+    transform: scaleX(1.03);
+    -webkit-text-stroke: .18vmin #111;
+    text-shadow: .08vmin .10vmin #fff, .18vmin .20vmin #191919;
+}
+    .score .digit {
+      display: grid;
+      grid-row: 1;
+      place-items: center;
       min-width: 0;
-      padding: clamp(50px, 5vw, 78px) clamp(16px, 2vw, 34px) clamp(25px, 3vw, 48px);
+      height: 100%;
       text-align: center;
-      box-shadow: inset 0 0 45px #0007;
+      transform: scaleX(.96) scaleY(1.06);
     }
-
-    .panel::after {
-      content: "";
-      position: absolute;
-      inset: 14px;
-      border: 3px solid rgba(255, 226, 125, .52);
-      border-radius: 15px;
-      pointer-events: none;
-    }
-
-    .ride-one {
-      background:
-        radial-gradient(circle at 50% 44%, rgba(73,176,255,.36), transparent 38%),
-        repeating-linear-gradient(45deg, transparent 0 30px, rgba(255,255,255,.04) 30px 60px),
-        linear-gradient(160deg, #0873c4, #06366f 72%);
-    }
-
-    .ride-two {
-      background:
-        radial-gradient(circle at 50% 44%, rgba(255,115,94,.35), transparent 38%),
-        repeating-linear-gradient(-45deg, transparent 0 30px, rgba(255,255,255,.04) 30px 60px),
-        linear-gradient(200deg, #d74342, #75131d 72%);
-    }
-
-    .center-stage {
-      z-index: 2;
-      color: var(--ink);
-      background:
-        radial-gradient(circle, rgba(255,255,255,.9) 0 2px, transparent 3px) 0 0 / 28px 28px,
-        radial-gradient(ellipse at center, #fffbed, #f6d58a 72%, #b87a24);
-      border-inline: clamp(5px, .6vw, 9px) ridge var(--gold);
-    }
-
-    .ride-title,
-    .top-three,
-    .brand {
-      margin: 0;
-      letter-spacing: .06em;
-      text-transform: uppercase;
-    }
-
-    .ride-title {
-      display: inline-block;
-      padding: .1em .45em;
-      color: #fff6bd;
-      font-size: clamp(36px, 4.1vw, 68px);
-      line-height: 1;
-      transform: rotate(-2deg);
-      text-shadow: 0 4px #6c3108, 0 0 16px #f9c847;
-      border-bottom: 5px double var(--gold);
-    }
-
-    .ride-two .ride-title { transform: rotate(2deg); }
-
-    .players {
+    .score .comma {
       position: relative;
-      z-index: 1;
-      display: grid;
-      gap: clamp(22px, 3vw, 48px);
-      margin-top: clamp(42px, 5vw, 75px);
+      grid-column: 1;
+      grid-row: 1;
+      place-self: center end;
+      width: auto;
+      height: auto;
+      padding: 0;
+      font-size: .68em;
+      line-height: .8;
+      transform: translate(38%, 28%);
     }
-
-    .player-name {
-      margin: 0 0 .45em;
-      color: white;
-      font-family: "Arial Black", Arial, sans-serif;
-      font-size: clamp(18px, 2vw, 31px);
-      letter-spacing: .08em;
-      text-shadow: 2px 3px #18202a;
+    @supports (font-size: 1cqh) {
+      .score:not(.rank-score) .digit:not(.comma) {
+        font-size: 78cqh;
+        transform: translateY(-3%) scaleX(.96) scaleY(1.06);
+      }
+      .score:not(.rank-score) .comma { font-size: 53cqh; }
+      .rank-score .digit:not(.comma) {
+        font-size: 86cqh;
+        transform: translateY(-5%) scaleX(.96) scaleY(1.06);
+      }
+      .rank-score .comma { font-size: 55cqh; }
     }
-
-    .score {
-      display: flex;
-      justify-content: center;
-      gap: clamp(2px, .3vw, 5px);
-      white-space: nowrap;
+    @supports (text-box-trim: trim-both) {
+      .score .digit:not(.comma) {
+        text-box-trim: trim-both;
+        text-box-edge: cap alphabetic;
+      }
+      .score:not(.rank-score) .digit:not(.comma) {
+        transform: scaleX(.96) scaleY(1.06);
+      }
+      .rank-score .digit:not(.comma) {
+        transform: scaleX(.96) scaleY(1.06);
+      }
     }
+    
+    .ride-one-p1 { left: 5.73%; top: 39%; width: 23.63%; height: 14.8%; }
+    .ride-one-p2 { left: 5.73%; top: 72.2%; width: 23.63%; height: 14.8%; }
+    .ride-two-p1 { left: 70.57%; top: 39%; width: 23.63%; height: 14.8%; color: #e40707; }
+    .ride-two-p2 { left: 70.57%; top: 72.2%; width: 23.63%; height: 14.8%; color: #e40707; }
+      /* 123456の1・2・3を左へ */
+.ride-one-p1 .digit:nth-child(1),
+.ride-one-p1 .digit:nth-child(2),
+.ride-one-p1 .digit:nth-child(3) {
+    position: relative;
+    right: 1mm;
+}
+    
+    .ride-one-p1 .digit:not(.comma) {
+    translate: 0 -0mm;
+    scale: 0.96;
+}
 
-    .digit {
-      display: grid;
-      place-items: center;
-      width: clamp(25px, 3vw, 47px);
-      aspect-ratio: .7;
-      color: #fffbd1;
-      font-family: "Arial Black", Impact, sans-serif;
-      font-size: clamp(25px, 3.5vw, 55px);
-      line-height: 1;
-      border: 2px solid #745017;
-      border-radius: 6px;
-      background: linear-gradient(#20242a 48%, #090b0e 50%);
-      box-shadow: inset 0 0 8px #000, 0 4px 0 #5c390b, 0 0 0 2px #e1b74f;
-      text-shadow: 0 2px 2px #000;
+      /* 7600だけ調整 */
+.ride-one-p2 .digit:not(.comma) {
+    translate: -0mm -1mm;
+}
+
+
+      /* 8410全体：少し上＋少し小さく */
+.ride-two-p2 .digit:not(.comma) {
+    translate: 0 -1mm;
+    scale: 0.94;
+}
+      
+    .rank-score {
+    grid-template-columns: repeat(5, 1fr);
+    font-size: clamp(30px, 8.4vmin, 133px);
+}
+    
+    .ride-one-p1 .comma,
+    .ride-one-p2 .comma {
+      translate: 6px 0;
+      transform: translate(52%, 20%);
     }
-
-    .digit.comma {
-      width: clamp(10px, 1.2vw, 18px);
-      color: var(--gold);
-      border: 0;
-      background: none;
-      box-shadow: none;
-      align-items: end;
-      padding-bottom: .12em;
+    .rank-one .digit:not(.comma) { transform: translateY(-8%) scaleX(.96) scaleY(1.06); }
+    .rank-one .comma { translate: 0 -2px; transform: translate(38%, 20%); }
+    .rank-three .digit:not(.comma) { transform: translateY(-6%) scaleX(.96) scaleY(1.06); }
+    .rank-three .comma { transform: translate(38%, 16%); }
+    @supports (font-size: 1cqh) {
+      .rank-three .digit:not(.comma) { font-size: 100cqh; }
     }
+    .rank-one { left: 37.63%; top: 34.5%; width: 24.87%; height: 12.4%; color: #e40707; font-size: clamp(34px, 8.6vmin, 136px); }
+    .rank-two { left: 37.83%; top: 56.7%; width: 24.35%; height: 10.2%; color: #003ee8; }
+    .rank-three { left: 37.83%; top: 78.3%; width: 24.35%; height: 8.3%; translate: 0 -5px; transform: translateY(3px); color: #087918; }
+  /* 数字の位置だけ微調整 */
 
-    .today {
-      position: relative;
-      z-index: 1;
-      margin: 0;
-      color: #7c201b;
-      font-family: "Arial Black", sans-serif;
-      font-size: clamp(18px, 2vw, 32px);
-      letter-spacing: .35em;
-    }
 
-    .top-three {
-      position: relative;
-      z-index: 1;
-      color: #b32820;
-      font-size: clamp(58px, 7vw, 112px);
-      line-height: .95;
-      text-shadow: 0 4px #fff0a2, 0 8px #87300e;
-    }
 
-    .podium {
-      position: relative;
-      z-index: 1;
-      display: grid;
-      gap: clamp(17px, 2vw, 30px);
-      margin-top: clamp(24px, 3vw, 42px);
-    }
+/* 3位の10900を少し下へ */
+.rank-three .digit:not(.comma) {
+    translate: 0 5px;
+}
+      .digit.comma-after {
+  position: relative;
+}
 
-    .rank {
-      position: relative;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: clamp(68px, 7vw, 105px);
-    }
+.digit.comma-after::after {
+  content: ",";
+  position: absolute;
+  right: -0.38em;
+  top: 36%;
+  font-size: .55em;
+  transform: translateY(-5%);
+}
+      /* カンマ個別調整 */
+.ride-one-p1 .comma-after::after {
+  right: -0.30em;
+  top: 57%;
+}
 
-    .rank.first {
-      transform: scale(1.12);
-      margin-bottom: clamp(6px, 1vw, 14px);
-    }
+.ride-one-p2 .comma-after::after {
+  right: -0.18em;
+    top: 50%;
+}
 
-    .crown {
-      position: absolute;
-      z-index: 3;
-      left: clamp(-4px, .5vw, 12px);
-      top: 50%;
-      display: grid;
-      place-items: center;
-      width: clamp(55px, 6vw, 94px);
-      aspect-ratio: 1.12;
-      color: #572b08;
-      font-size: clamp(24px, 3vw, 47px);
-      line-height: 1;
-      transform: translateY(-55%) rotate(-8deg);
-      clip-path: polygon(0 25%, 22% 48%, 35% 0, 52% 45%, 75% 4%, 83% 48%, 100% 23%, 89% 100%, 12% 100%);
-      background: linear-gradient(135deg, #fff8a8, #e9a820 55%, #8a4f08);
-      filter: drop-shadow(0 5px 2px #54300a88);
-    }
+.ride-two-p1 .comma-after::after {
+  right: -0.20em;
+    top: 55%;
+}
 
-    .second .crown { background: linear-gradient(135deg, #fff, #b8c0c8 60%, #68717b); }
-    .third .crown { background: linear-gradient(135deg, #ffd4a3, #b96c2e 60%, #6e3512); }
+.ride-two-p2 .comma-after::after {
+  right: -0.17em;
+    top: 50%;
+}
 
-    .center-stage .digit {
-      width: clamp(26px, 3.1vw, 49px);
-      font-size: clamp(27px, 3.6vw, 57px);
-    }
+.rank-one .comma-after::after {
+  right: -0.25em;
+    top: 60%;
+}
 
-    .brand {
-      position: absolute;
-      z-index: 3;
-      right: 0;
-      bottom: clamp(20px, 2.2vw, 34px);
-      left: 0;
-      color: #772019;
-      font-size: clamp(17px, 1.8vw, 28px);
-      text-shadow: 0 2px #fff4af;
-    }
+.rank-two .comma-after::after {
+  right: -0.40em;
+    top: 65%;
+}
 
-    @media (max-width: 900px) {
-      .viewer { width: 98vw; min-height: 500px; }
-      .panel { padding-inline: 12px; }
-      .panel::after { inset: 9px; }
-      .crown { left: -5px; }
-    }
-
-    @media (max-width: 680px) {
-      body { place-items: center start; }
-      .viewer { width: 920px; margin: 14px; }
-    }
+.rank-three .comma-after::after {
+  right: -0.23em;
+    top: 50%;
+}
   </style>
 </head>
 <body>
   <main class="viewer" aria-label="High Score Viewer">
-    <section class="panel ride ride-one" aria-labelledby="ride-one-title">
-      <h2 class="ride-title" id="ride-one-title">RIDE 1</h2>
-      <div class="players">
-        <article>
-          <p class="player-name">Player 1</p>
-          <div class="score" data-score="8,200" aria-label="8,200 points"></div>
-        </article>
-        <article>
-          <p class="player-name">Player 2</p>
-          <div class="score" data-score="7,600" aria-label="7,600 points"></div>
-        </article>
-      </div>
-    </section>
-
-    <section class="panel center-stage" aria-labelledby="top-three-title">
-      <p class="today">本日の</p>
-      <h1 class="top-three" id="top-three-title">TOP3</h1>
-      <div class="podium">
-        <article class="rank first">
-          <div class="crown" aria-label="1位">1</div>
-          <div class="score" data-score="12,500" aria-label="1位 12,500 points"></div>
-        </article>
-        <article class="rank second">
-          <div class="crown" aria-label="2位">2</div>
-          <div class="score" data-score="11,800" aria-label="2位 11,800 points"></div>
-        </article>
-        <article class="rank third">
-          <div class="crown" aria-label="3位">3</div>
-          <div class="score" data-score="10,900" aria-label="3位 10,900 points"></div>
-        </article>
-      </div>
-      <p class="brand">IDE STORY MANIA!</p>
-    </section>
-
-    <section class="panel ride ride-two" aria-labelledby="ride-two-title">
-      <h2 class="ride-title" id="ride-two-title">RIDE 2</h2>
-      <div class="players">
-        <article>
-          <p class="player-name">Player 1</p>
-          <div class="score" data-score="7,950" aria-label="7,950 points"></div>
-        </article>
-        <article>
-          <p class="player-name">Player 2</p>
-          <div class="score" data-score="8,410" aria-label="8,410 points"></div>
-        </article>
-      </div>
-    </section>
+    <div class="score ride-one-p1" data-score="123,456" aria-label="RIDE 1 Player 1 123,456 points"></div>
+    <div class="score ride-one-p2" data-score="7,600" aria-label="RIDE 1 Player 2 7,600 points"></div>
+    <div class="score ride-two-p1" data-score="7,950" aria-label="RIDE 2 Player 1 7,950 points"></div>
+    <div class="score ride-two-p2" data-score="8,410" aria-label="RIDE 2 Player 2 8,410 points"></div>
+    <div class="score rank-score rank-one" data-score="12,500" aria-label="1位 12,500 points"></div>
+    <div class="score rank-score rank-two" data-score="11,800" aria-label="2位 11,800 points"></div>
+    <div class="score rank-score rank-three" data-score="10,900" aria-label="3位 10,900 points"></div>
   </main>
-
   <script>
-    document.querySelectorAll('[data-score]').forEach((score) => {
-      score.dataset.score.split('').forEach((character) => {
-        const digit = document.createElement('span');
-        digit.className = character === ',' ? 'digit comma' : 'digit';
-        digit.textContent = character;
-        digit.setAttribute('aria-hidden', 'true');
-        score.appendChild(digit);
-      });
-    });
-  </script>
+document.querySelectorAll('[data-score]').forEach((score) => {
+  const value = score.dataset.score.replace(/,/g, '');
+  const padded = value.padStart(6, ' ');
+
+  padded.split('').forEach((character, index) => {
+    const digit = document.createElement('span');
+    digit.className = 'digit';
+    digit.textContent = character;
+    score.appendChild(digit);
+
+    if (index === 2 && value.length >= 4) {
+    digit.classList.add('comma-after');
+}
+  });
+});
+</script>
 </body>
 </html>
-
